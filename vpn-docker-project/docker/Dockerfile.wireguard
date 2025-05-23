@@ -1,0 +1,9 @@
+FROM --platform=linux/arm64 ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive WG_HOST=auto WG_PORT=51820
+RUN apt-get update && apt-get install -y wireguard wireguard-tools iptables iproute2 qrencode curl nano net-tools iputils-ping procps && apt-get clean
+RUN mkdir -p /etc/wireguard /app/scripts /var/log/wireguard
+COPY scripts/ /app/scripts/
+COPY scripts/entrypoint.sh /entrypoint.sh
+RUN chmod +x /app/scripts/*.sh /entrypoint.sh
+EXPOSE 51820/udp
+ENTRYPOINT ["/entrypoint.sh"]
